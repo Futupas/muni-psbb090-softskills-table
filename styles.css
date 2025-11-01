@@ -1,0 +1,165 @@
+:root {
+    --background-color: #1e1e1e;
+    --panel-background: #2d2d2d;
+    --text-color: #e0e0e0;
+    --border-color: #444;
+    --primary-color: #007acc;
+    --success-color: #28a745;
+    --error-color: #dc3545;
+    --min-team-height: 200px;
+}
+
+body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    overflow: hidden;
+    height: 100vh;
+    display: flex;
+}
+
+.container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.left-panel {
+    width: 50%;
+    padding: 20px;
+    overflow-y: auto;
+    background-color: var(--panel-background);
+}
+
+#item-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+#item-table th, #item-table td {
+    border: 1px solid var(--border-color);
+    padding: 12px;
+    text-align: left;
+}
+
+#item-table th {
+    background-color: #333;
+    cursor: pointer;
+    user-select: none;
+}
+
+#item-table th:hover {
+    background-color: #444;
+}
+
+#item-table tbody tr {
+    cursor: grab;
+}
+
+#item-table tbody tr.dragging {
+    opacity: 0.5;
+}
+
+#item-table tbody tr.empty {
+    cursor: not-allowed;
+    color: #888;
+}
+
+.resizer {
+    width: 5px;
+    background-color: var(--border-color);
+    cursor: col-resize;
+    height: 100%;
+}
+
+.right-panel {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--panel-background);
+}
+
+.teams-container {
+    flex-grow: 1;
+    overflow-y: auto;
+    padding: 10px;
+}
+
+.team {
+    background-color: #333;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    margin-bottom: 10px;
+    min-height: var(--min-team-height);
+    display: flex;
+    flex-direction: column;
+}
+
+.team-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
+    background-color: #3c3c3c;
+}
+
+.team-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    border: none;
+    background-color: transparent;
+    color: var(--text-color);
+}
+
+.remove-team-btn {
+    background: none;
+    border: none;
+    color: var(--error-color);
+    font-size: 1.5em;
+    cursor: pointer;
+}
+
+.team-info {
+    padding: 10px;
+    font-size: 0.9em;
+}
+
+.team-item-list {
+    flex-grow: 1;
+    padding: 10px;
+    list-style: none;
+    margin: 0;
+}
+
+.team-item-list li {
+    padding: 5px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.add-team-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    font-size: 2em;
+    cursor: pointer;
+    padding: 10px 0;
+    width: 100%;
+}
+
+.drag-over {
+    border: 2px dashed var(--primary-color);
+    background-color: rgba(0, 122, 204, 0.2);
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: var(--error-color);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    display: none;
+    z-index: 1000;
+}

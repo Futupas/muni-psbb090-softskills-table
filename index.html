@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Výběr položek pro týmy</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <table id="item-table">
+                <thead>
+                    <tr>
+                        <th data-column="name">Název položky</th>
+                        <th data-column="count">Počet</th>
+                        <th data-column="weight">Hmotnost (kg)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Items will be inserted here by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        <div class="resizer" id="resizer"></div>
+        <div class="right-panel" id="teams-panel">
+            <div class="teams-container" id="teams-container">
+                <!-- Teams will be inserted here by JavaScript -->
+            </div>
+            <button id="add-team-btn" class="add-team-btn">+</button>
+        </div>
+    </div>
+    <div id="notification" class="notification"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
