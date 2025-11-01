@@ -51,6 +51,8 @@ document.addEventListener('DOMContentLoaded', () => {
         { id: 36, name: 'Rubikova kostka', count: 1, weight: 0.5 }
     ];
 
+    const NOTIFICATION_TIMEOUT = 5000;
+
     // --- DOM Elements ---
     const container = document.getElementById('container');
     const tableBody = document.getElementById('item-table-body');
@@ -61,6 +63,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const leftPanel = document.querySelector('.left-panel');
     const rightPanel = document.querySelector('.right-panel');
     const notificationEl = document.getElementById('notification');
+    const notificationMessage = document.getElementById('notification-message');
+    const notificationCloseBtn = document.getElementById('notification-close');
 
     // --- Application State ---
     let itemsState = JSON.parse(JSON.stringify(ITEMS));
@@ -217,9 +221,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Other Functions ---
     const showNotification = (message) => {
-        notificationEl.textContent = message;
+        notificationMessage.textContent = message; // Target the inner span
         notificationEl.style.display = 'block';
-        setTimeout(() => { notificationEl.style.display = 'none'; }, 3000);
+        // The timeout now just hides it, it doesn't clear content
+        setTimeout(() => {
+            notificationEl.style.display = 'none';
+        }, NOTIFICATION_TIMEOUT); // Increased timeout slightly
     };
 
     const addTeam = () => {
@@ -312,6 +319,10 @@ document.addEventListener('DOMContentLoaded', () => {
         window.addEventListener('mouseup', handleMouseUp);
     });
 
+    notificationCloseBtn.addEventListener('click', () => {
+        notificationEl.style.display = 'none';
+    });
+    
     // --- Initialization ---
     rerender();
 });

@@ -5,9 +5,9 @@
     --text-color: #f1f1f1;
     --border-color: #555;
     --primary-color: #0a84ff;
-    --error-color: #ff453a;
+    --error-color: #d9534f;
     --drag-background: rgba(10, 132, 255, 0.2);
-    --min-team-height: 180px;
+    --min-team-height: 250px;
     --min-panel-width: 20%;
 }
 
@@ -140,6 +140,7 @@ body {
     padding: 8px 12px;
     font-size: 0.9em;
     border-bottom: 1px solid var(--border-color);
+    text-align: center;
 }
 
 .team-item-list {
@@ -183,8 +184,18 @@ body {
     right: 20px;
     background-color: var(--error-color);
     color: white;
-    padding: 15px;
+    padding: 15px 20px 15px 40px; /* Make space on the left */
     border-radius: 5px;
     display: none;
     z-index: 1000;
+}
+/* Add this new rule */
+.notification-close {
+    position: absolute;
+    top: 13px;
+    left: 10px;
+    font-size: 1.5em;
+    line-height: 1;
+    cursor: pointer;
+    font-weight: bold;
 }
