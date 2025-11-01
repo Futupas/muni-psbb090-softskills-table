@@ -56,7 +56,7 @@ body {
     background-color: var(--header-background);
     cursor: pointer;
     position: sticky;
-    top: -1px; /* Ensures it stays on top when scrolling */
+    top: -16px; /* -1 -15 Ensures it stays on top when scrolling */
 }
 
 #item-table tbody tr {

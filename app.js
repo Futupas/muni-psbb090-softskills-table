@@ -4,14 +4,51 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Constants ---
     const MAX_ITEMS_PER_TEAM = 5;
     const MAX_WEIGHT_PER_TEAM = 10;
-    const TEAM_NAMES = ['Alfa', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot'];
+    const TEAM_NAMES = [
+        'Veselí Trosečníci', 
+        'Piráti z Vany', 
+        'Posádka "Utopie"', 
+        'Klub Opuštěného Ostrova', 
+        'Mistři Přežití', 
+        'Kapitáni Křesel'
+    ];
     const ITEMS = [
-        { id: 1, name: 'Počítač', count: 3, weight: 5 },
-        { id: 2, name: 'Monitor', count: 5, weight: 3.5 },
-        { id: 3, name: 'Klávesnice', count: 10, weight: 0.8 },
-        { id: 4, name: 'Myš', count: 15, weight: 0.2 },
-        { id: 5, name: 'Tiskárna', count: 2, weight: 8 },
-        { id: 6, name: 'Projektor', count: 1, weight: 4.5 },
+        { id: 1, name: 'Duct Tape', count: 10, weight: 1 },
+        { id: 2, name: 'Litr motorového oleje', count: 10, weight: 1 },
+        { id: 3, name: 'Multifunkční nůž', count: 10, weight: 0 },
+        { id: 4, name: 'Kompas', count: 10, weight: 0 },
+        { id: 5, name: 'Rybářský vlasec a háčky', count: 10, weight: 0 },
+        { id: 6, name: 'Héliová lahev (malá, na párty balónky)', count: 9, weight: 0.5 },
+        { id: 7, name: 'Stojan na ubrousky', count: 9, weight: 0.5 },
+        { id: 8, name: 'Lávová lampa', count: 9, weight: 0.5 },
+        { id: 9, name: 'Vaflovač', count: 8, weight: 0.5 },
+        { id: 10, name: 'Selfie tyč', count: 8, weight: 0.5 },
+        { id: 11, name: 'Hřebínek', count: 8, weight: 0.5 },
+        { id: 12, name: 'Bowlingová koule', count: 7, weight: 1 },
+        { id: 13, name: 'Maska jednorožce', count: 7, weight: 0.5 },
+        { id: 14, name: 'Podtácky na pivo', count: 7, weight: 0.5 },
+        { id: 15, name: 'Lano (15 metrů)', count: 2, weight: 2 },
+        { id: 16, name: 'Benzín (1l)', count: 2, weight: 1 },
+        { id: 17, name: 'Sekera', count: 2, weight: 2 },
+        { id: 18, name: 'Světlice (s jednou ranou)', count: 2, weight: 1 },
+        { id: 19, name: 'Sextant', count: 2, weight: 1 },
+        { id: 20, name: 'Hodinky', count: 2, weight: 0 },
+        { id: 21, name: 'Zapalovač', count: 2, weight: 0 },
+        { id: 22, name: 'Flashlight', count: 2, weight: 1 },
+        { id: 23, name: 'Lupa', count: 2, weight: 0.5 },
+        { id: 24, name: 'Kniha "Jak přežít v divočině"', count: 2, weight: 1 },
+        { id: 25, name: 'Turistická sada', count: 2, weight: 4 },
+        { id: 26, name: 'Nepromokavá plachta (3x3m)', count: 2, weight: 2 },
+        { id: 27, name: 'Teplé oblečení', count: 2, weight: 2 },
+        { id: 28, name: 'Hrnec', count: 2, weight: 1 },
+        { id: 29, name: '5l pitné vody', count: 2, weight: 5 },
+        { id: 30, name: 'Jídlo', count: 2, weight: 5 },
+        { id: 31, name: 'Vodní filtr', count: 2, weight: 2 },
+        { id: 32, name: 'Sůl (1kg)', count: 2, weight: 1 },
+        { id: 33, name: 'Lékárnička', count: 2, weight: 3 },
+        { id: 34, name: 'Rum (1l)', count: 2, weight: 1 },
+        { id: 35, name: 'Nafukovací záchranný člun (v batohu)', count: 1, weight: 6 },
+        { id: 36, name: 'Rubikova kostka', count: 1, weight: 0.5 }
     ];
 
     // --- DOM Elements ---
