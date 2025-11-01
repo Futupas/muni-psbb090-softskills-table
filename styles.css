@@ -4,9 +4,9 @@
     --text-color: #e0e0e0;
     --border-color: #444;
     --primary-color: #007acc;
-    --success-color: #28a745;
     --error-color: #dc3545;
     --min-team-height: 200px;
+    --min-panel-width: 20%;
 }
 
 body {
@@ -17,6 +17,7 @@ body {
     overflow: hidden;
     height: 100vh;
     display: flex;
+    user-select: none; /* Forbid selection */
 }
 
 .container {
@@ -30,6 +31,7 @@ body {
     padding: 20px;
     overflow-y: auto;
     background-color: var(--panel-background);
+    min-width: var(--min-panel-width);
 }
 
 #item-table {
@@ -46,7 +48,6 @@ body {
 #item-table th {
     background-color: #333;
     cursor: pointer;
-    user-select: none;
 }
 
 #item-table th:hover {
@@ -57,13 +58,16 @@ body {
     cursor: grab;
 }
 
-#item-table tbody tr.dragging {
+/* Style for the item being dragged */
+.dragging {
     opacity: 0.5;
 }
 
+/* Style for items with zero count */
 #item-table tbody tr.empty {
     cursor: not-allowed;
     color: #888;
+    background-color: #252525;
 }
 
 .resizer {
@@ -78,6 +82,7 @@ body {
     display: flex;
     flex-direction: column;
     background-color: var(--panel-background);
+    min-width: var(--min-panel-width);
 }
 
 .teams-container {
@@ -110,6 +115,7 @@ body {
     border: none;
     background-color: transparent;
     color: var(--text-color);
+    width: 100%;
 }
 
 .remove-team-btn {
@@ -118,23 +124,44 @@ body {
     color: var(--error-color);
     font-size: 1.5em;
     cursor: pointer;
+    padding: 0 10px;
 }
 
 .team-info {
     padding: 10px;
     font-size: 0.9em;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .team-item-list {
     flex-grow: 1;
-    padding: 10px;
+    padding: 0;
     list-style: none;
     margin: 0;
+    overflow-y: auto;
 }
 
 .team-item-list li {
-    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 10px;
     border-bottom: 1px solid var(--border-color);
+    cursor: grab;
+}
+
+.team-item-list li:last-child {
+    border-bottom: none;
+}
+
+.team-item-name {
+    flex-grow: 1;
+}
+
+.team-item-details {
+    color: #aaa;
+    margin-left: 15px;
+    min-width: 90px;
+    text-align: right;
 }
 
 .add-team-btn {
@@ -147,6 +174,7 @@ body {
     width: 100%;
 }
 
+/* Style for a valid drop target */
 .drag-over {
     border: 2px dashed var(--primary-color);
     background-color: rgba(0, 122, 204, 0.2);
