@@ -1,7 +1,5 @@
 'use strict';
 
-//todo remove potentional XSS
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- Constants ---
     const MAX_ITEMS_PER_TEAM = 5;
