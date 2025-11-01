@@ -27,12 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Application State ---
     let itemsState = JSON.parse(JSON.stringify(ITEMS));
-    let teamsState = [];
-    let draggedItemInfo = null; // { item, source, teamId (if from team), instanceId (if from team) }
+    // Initialize with two default teams
+    let teamsState = [
+        { id: Date.now(), name: TEAM_NAMES[0], items: [] },
+        { id: Date.now() + 1, name: TEAM_NAMES[1], items: [] }
+    ];
+    let draggedItemInfo = null;
     let sortState = { column: 'name', direction: 'asc' };
 
     // --- Render Functions ---
-
     const renderTable = () => {
         tableBody.innerHTML = '';
         sortTable(); // Sort before rendering
@@ -40,15 +43,12 @@ document.addEventListener('DOMContentLoaded', () => {
             const row = document.createElement('tr');
             row.dataset.id = item.id;
             row.draggable = item.count > 0;
-
             row.classList.toggle('empty', item.count === 0);
-
             row.innerHTML = `
                 <td>${item.name}</td>
                 <td>${item.count}</td>
                 <td>${item.weight}</td>
             `;
-
             row.addEventListener('dragstart', handleTableDragStart);
             row.addEventListener('dragend', handleDragEnd);
             tableBody.appendChild(row);
@@ -61,9 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const teamEl = document.createElement('div');
             teamEl.classList.add('team');
             teamEl.dataset.id = team.id;
-
             const totalWeight = team.items.reduce((sum, item) => sum + item.weight, 0);
-
             let itemsHtml = '';
             team.items.forEach(item => {
                 itemsHtml += `
@@ -72,7 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="team-item-details">1 ks / ${item.weight.toFixed(1)} kg</span>
                     </li>`;
             });
-
             teamEl.innerHTML = `
                 <div class="team-header">
                     <input type="text" class="team-name" value="${team.name}" data-id="${team.id}">
@@ -84,19 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
                 <ul class="team-item-list">${itemsHtml}</ul>
             `;
-            
             teamEl.addEventListener('dragover', handleDragOver);
             teamEl.addEventListener('dragleave', handleDragLeave);
             teamEl.addEventListener('drop', handleDropOnTeam);
-            
             teamEl.querySelectorAll('.team-item-list li').forEach(li => {
                 li.addEventListener('dragstart', handleTeamDragStart);
                 li.addEventListener('dragend', handleDragEnd);
             });
-
             teamsContainer.appendChild(teamEl);
         });
-        adjustTeamHeights();
     };
 
     const rerender = () => {
@@ -105,38 +98,37 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     // --- Drag and Drop Handlers ---
-
     function handleTableDragStart(e) {
         const itemId = parseInt(this.dataset.id);
         const item = itemsState.find(p => p.id === itemId);
         draggedItemInfo = { item: { ...item }, source: 'table' };
         this.classList.add('dragging');
     }
-    
+
     function handleTeamDragStart(e) {
-        e.stopPropagation(); // Prevent team drag events from firing
+        e.stopPropagation();
         const itemId = parseInt(this.dataset.itemId);
         const teamId = parseInt(this.dataset.teamId);
         const instanceId = parseInt(this.dataset.instanceId);
         const item = itemsState.find(p => p.id === itemId);
-        
         draggedItemInfo = { item: { ...item }, source: 'team', teamId, instanceId };
         this.classList.add('dragging');
     }
-    
-    function handleDragEnd() {
-        this.classList.remove('dragging');
+
+    function handleDragEnd(e) {
+        // Use a small timeout to ensure this runs after the drop event
+        setTimeout(() => {
+            document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
+            draggedItemInfo = null;
+        }, 0);
         document.querySelectorAll('.drag-over').forEach(el => el.classList.remove('drag-over'));
-        draggedItemInfo = null;
     }
 
     function handleDragOver(e) {
         e.preventDefault();
-        // Add visual cue only if it's a valid drop target
         const targetIsTeam = e.currentTarget.classList.contains('team');
         const targetIsTable = e.currentTarget.id === 'item-table-body';
-        
-        if ((targetIsTeam && draggedItemInfo?.source === 'table') || 
+        if ((targetIsTeam && draggedItemInfo?.source === 'table') ||
             (targetIsTable && draggedItemInfo?.source === 'team')) {
             e.currentTarget.classList.add('drag-over');
         }
@@ -145,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleDragLeave(e) {
         e.currentTarget.classList.remove('drag-over');
     }
-    
+
     function handleDropOnTeam(e) {
         e.preventDefault();
         if (draggedItemInfo?.source !== 'table') return;
@@ -155,35 +147,30 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = draggedItemInfo.item;
 
         if (!team || !item) return;
-        
+
         const totalWeight = team.items.reduce((sum, p) => sum + p.weight, 0);
 
         if (team.items.length >= MAX_ITEMS_PER_TEAM) {
-            showNotification(`Tým "${team.name}" má již maximální počet položek.`);
-            return;
+            return showNotification(`Tým "${team.name}" má již maximální počet položek.`);
         }
         if (totalWeight + item.weight > MAX_WEIGHT_PER_TEAM) {
-            showNotification(`Přidáním této položky by tým "${team.name}" překročil maximální hmotnost.`);
-            return;
+            return showNotification(`Přidáním této položky by tým "${team.name}" překročil maximální hmotnost.`);
         }
 
         const sourceItem = itemsState.find(p => p.id === item.id);
         if (sourceItem.count > 0) {
             sourceItem.count--;
-            team.items.push({ ...item, instanceId: Date.now() }); // Unique ID for this specific instance
+            team.items.push({ ...item, instanceId: Date.now() });
             rerender();
         }
     }
-    
+
     function handleDropOnTable(e) {
         e.preventDefault();
         if (draggedItemInfo?.source !== 'team') return;
-        
         const { item, teamId, instanceId } = draggedItemInfo;
-
         const sourceItem = itemsState.find(p => p.id === item.id);
         const sourceTeam = teamsState.find(t => t.id === teamId);
-        
         if (sourceItem && sourceTeam) {
             sourceItem.count++;
             sourceTeam.items = sourceTeam.items.filter(i => i.instanceId !== instanceId);
@@ -192,20 +179,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- Other Functions ---
-
     const showNotification = (message) => {
         notificationEl.textContent = message;
         notificationEl.style.display = 'block';
-        setTimeout(() => {
-            notificationEl.style.display = 'none';
-        }, 3000);
+        setTimeout(() => { notificationEl.style.display = 'none'; }, 3000);
     };
 
     const addTeam = () => {
         const usedNames = teamsState.map(t => t.name);
         const availableNames = TEAM_NAMES.filter(n => !usedNames.includes(n));
         const newName = availableNames.length > 0 ? availableNames[0] : `Tým ${teamsState.length + 1}`;
-        
         teamsState.push({ id: Date.now(), name: newName, items: [] });
         renderTeams();
     };
@@ -213,55 +196,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const removeTeam = (teamId) => {
         const teamIndex = teamsState.findIndex(t => t.id === teamId);
         if (teamIndex === -1) return;
-
         const team = teamsState[teamIndex];
         team.items.forEach(teamItem => {
             const originalItem = itemsState.find(p => p.id === teamItem.id);
             if (originalItem) originalItem.count++;
         });
-
         teamsState.splice(teamIndex, 1);
         rerender();
     };
 
-    const adjustTeamHeights = () => {
-        const teams = teamsContainer.querySelectorAll('.team');
-        if (teams.length > 0) {
-            const containerHeight = teamsContainer.clientHeight;
-            const newHeight = containerHeight / teams.length;
-            const minHeight = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--min-team-height'));
-            
-            teams.forEach(team => {
-                team.style.height = `${Math.max(newHeight, minHeight)}px`;
-            });
-        }
-    };
-    
     const sortTable = () => {
         const { column, direction } = sortState;
-        
         const inStock = itemsState.filter(item => item.count > 0);
         const outOfStock = itemsState.filter(item => item.count === 0);
-
         const type = (column === 'name') ? 'string' : 'number';
 
         inStock.sort((a, b) => {
             const valA = a[column];
             const valB = b[column];
             const modifier = direction === 'asc' ? 1 : -1;
-
-            if (type === 'number') {
-                return (valA - valB) * modifier;
-            } else {
-                return valA.localeCompare(valB, 'cs') * modifier;
-            }
+            if (type === 'number') return (valA - valB) * modifier;
+            return valA.localeCompare(valB, 'cs') * modifier;
         });
-        
         itemsState = [...inStock, ...outOfStock];
     };
 
     // --- Event Listeners ---
-
     addTeamBtn.addEventListener('click', addTeam);
 
     teamsContainer.addEventListener('click', (e) => {
@@ -276,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (team) team.name = e.target.value;
         }
     });
-    
+
     tableHeader.addEventListener('click', (e) => {
         const headerCell = e.target.closest('th');
         if (headerCell) {
@@ -297,32 +257,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     resizer.addEventListener('mousedown', (e) => {
         e.preventDefault();
-
         const handleMouseMove = (moveEvent) => {
             const containerRect = container.getBoundingClientRect();
             const minWidthPx = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--min-panel-width')) / 100) * containerRect.width;
-
             let newLeftWidth = moveEvent.clientX - containerRect.left;
-            
-            // Enforce minimum width
             newLeftWidth = Math.max(newLeftWidth, minWidthPx);
             newLeftWidth = Math.min(newLeftWidth, containerRect.width - minWidthPx);
-
             const percentage = (newLeftWidth / containerRect.width) * 100;
             leftPanel.style.width = `${percentage}%`;
             rightPanel.style.width = `${100 - percentage}%`;
         };
-
         const handleMouseUp = () => {
             window.removeEventListener('mousemove', handleMouseMove);
             window.removeEventListener('mouseup', handleMouseUp);
         };
-        
         window.addEventListener('mousemove', handleMouseMove);
         window.addEventListener('mouseup', handleMouseUp);
     });
-    
-    new ResizeObserver(adjustTeamHeights).observe(teamsContainer);
 
     // --- Initialization ---
     rerender();
