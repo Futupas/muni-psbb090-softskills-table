@@ -1,16 +1,22 @@
 'use strict';
 
+//todo remove potentional XSS
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- Constants ---
     const MAX_ITEMS_PER_TEAM = 5;
     const MAX_WEIGHT_PER_TEAM = 10;
     const TEAM_NAMES = [
-        'Veselí Trosečníci', 
-        'Piráti z Vany', 
-        'Posádka "Utopie"', 
-        'Klub Opuštěného Ostrova', 
-        'Mistři Přežití', 
-        'Kapitáni Křesel'
+        'Profesionální Přeživší',
+        'Společenstvo Prstenu a Rumun',
+        'Trosečníci s.r.o.',
+        'Kapitáni Vlastní Vany',
+        'Posádka Létajícího Špagetového Monstra',
+        'Experti na Kokosy',
+        'Lovci Selfie Tyčí',
+        'Klub Otrhaných Dobrodruhů',
+        'Jednorožci Apokalypsy',
+        'Syndikát Lávových Lamp'
     ];
     const ITEMS = [
         { id: 1, name: 'Duct Tape', count: 10, weight: 1 },
@@ -114,11 +120,10 @@ document.addEventListener('DOMContentLoaded', () => {
             teamEl.innerHTML = `
                 <div class="team-header">
                     <input type="text" class="team-name" value="${team.name}" data-id="${team.id}">
+                    <span class="team-header-stats">
+                        ${team.items.length}/${MAX_ITEMS_PER_TEAM} věcí, ${totalWeight.toFixed(1)}/${MAX_WEIGHT_PER_TEAM} kg
+                    </span>
                     <button class="remove-team-btn" data-id="${team.id}">&times;</button>
-                </div>
-                <div class="team-info">
-                    Položek: ${team.items.length} / ${MAX_ITEMS_PER_TEAM}<br>
-                    Hmotnost: ${totalWeight.toFixed(2)} kg / ${MAX_WEIGHT_PER_TEAM} kg
                 </div>
                 <ul class="team-item-list">${itemsHtml}</ul>
             `;
@@ -322,7 +327,7 @@ document.addEventListener('DOMContentLoaded', () => {
     notificationCloseBtn.addEventListener('click', () => {
         notificationEl.style.display = 'none';
     });
-    
+
     // --- Initialization ---
     rerender();
 });

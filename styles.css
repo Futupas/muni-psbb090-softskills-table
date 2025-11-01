@@ -7,7 +7,7 @@
     --primary-color: #0a84ff;
     --error-color: #d9534f;
     --drag-background: rgba(10, 132, 255, 0.2);
-    --min-team-height: 250px;
+    --min-team-height: 220px;
     --min-panel-width: 20%;
 }
 
@@ -124,7 +124,8 @@ body {
     border: none;
     background-color: transparent;
     color: var(--text-color);
-    width: 100%;
+    flex-grow: 1;
+    min-width: 0;
 }
 
 .remove-team-btn {
@@ -136,11 +137,12 @@ body {
     padding: 0 10px;
 }
 
-.team-info {
-    padding: 8px 12px;
-    font-size: 0.9em;
-    border-bottom: 1px solid var(--border-color);
-    text-align: center;
+.team-header-stats {
+    font-size: 1em;
+    color: #eee;
+    padding: 0 15px;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .team-item-list {
